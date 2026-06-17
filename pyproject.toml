@@ -1,0 +1,27 @@
+[project]
+name = "music-genre-classifier"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "IlyaYakovenko", email = "iakovenko.io@phystech.edu" }
+]
+requires-python = ">=3.11"
+dependencies = [
+    "fastai>=2.7.19",
+    "matplotlib>=3.9.4",
+    "numpy>=2.0.2",
+    "pandas>=2.3.3",
+    "pillow>=11.3.0",
+    "scikit-learn>=1.6.1",
+]
+
+[project.scripts]
+music-genre-classifier = "music_genre_classifier.main:main"
+
+[build-system]
+requires = ["uv_build>=0.11.21,<0.12.0"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-root = ""
