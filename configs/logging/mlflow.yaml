@@ -1,0 +1,15 @@
+mlflow_tracking_uri: http://127.0.0.1:8080
+experiment_name: music-genre-classifier
+run_name: null
+
+log_model: false
+plots_dir: plots
+
+metrics:
+  - train_loss
+  - val_loss
+  - train_acc
+  - val_acc
+  - train_f1_macro
+  - val_f1_macro
+  - learning_rate

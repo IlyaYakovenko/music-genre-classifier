@@ -1,0 +1,16 @@
+max_epochs: 1
+batch_size: 32
+learning_rate: 0.002
+
+label_smoothing: 0.15
+mixup_alpha: 0.4
+optimizer: adamw
+
+accelerator: auto
+devices: auto
+precision: 16-mixed
+
+resume: false
+save_every_n_train_steps: 100
+
+output_dir: saved_model

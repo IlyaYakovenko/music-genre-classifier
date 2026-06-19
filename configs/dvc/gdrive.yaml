@@ -1,0 +1,11 @@
+enabled: true
+
+data_target: dataset
+model_target: saved_model
+
+data_remote: data_remote
+models_remote: models_remote
+
+pull_data_before_train: true
+pull_model_before_infer: true
+push_model_after_train: false

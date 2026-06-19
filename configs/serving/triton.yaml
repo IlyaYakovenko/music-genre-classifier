@@ -1,0 +1,9 @@
+model_name: music_genre_classifier
+model_repository: triton_model_repository
+model_version: 1
+
+backend: onnxruntime
+max_batch_size: 8
+
+http_url: localhost:8000
+grpc_url: localhost:8001

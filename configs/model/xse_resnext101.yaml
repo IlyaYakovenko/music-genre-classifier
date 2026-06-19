@@ -1,0 +1,7 @@
+name: xse_resnext101
+num_classes: 19
+
+use_blurpool: true
+activation: mish
+self_attention: true
+pretrained: false

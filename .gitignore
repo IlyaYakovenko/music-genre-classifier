@@ -1,3 +1,13 @@
+dataset/
+*.ipynb
+saved_model/
+plots/
+exported_model/
+triton_model_repository/
+mlruns/
+mlartifacts/
+mlflow.db
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]

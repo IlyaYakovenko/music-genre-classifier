@@ -1,0 +1,14 @@
+defaults:
+  - data: spectrograms
+  - model: xse_resnext101
+  - train: lightning
+  - logging: mlflow
+  - dvc: gdrive
+  - preprocess: mel_spectrogram
+  - inference: local
+  - export: onnx_tensorrt
+  - serving: triton
+  - _self_
+
+project_name: music-genre-classifier
+seed: 42

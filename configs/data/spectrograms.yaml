@@ -1,0 +1,11 @@
+train_csv: dataset/train.csv
+spectrogram_dir: dataset/train
+genres_csv: dataset/genres.csv
+
+num_classes: 19
+num_folds: 7
+fold_id: 0
+
+max_items_per_class: null
+num_workers: 0
+image_size: 224

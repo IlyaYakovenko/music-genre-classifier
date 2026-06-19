@@ -1,0 +1,17 @@
+sample_rate: 32000
+duration_seconds: 30
+max_audio_duration_seconds: 300
+
+n_mels: 224
+image_size: 224
+n_fft: 2048
+hop_length: 512
+f_min: 20
+f_max: 16000
+
+audio_extensions:
+  - .mp3
+  - .wav
+  - .flac
+  - .aac
+  - .ogg

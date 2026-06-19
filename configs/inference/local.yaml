@@ -1,0 +1,6 @@
+checkpoint_path: saved_model/fold_0/checkpoints/best.ckpt
+genres_csv: dataset/genres.csv
+
+chunk_seconds: 30
+aggregation: mean_proba
+device: auto
