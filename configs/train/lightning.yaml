@@ -12,5 +12,11 @@ precision: 16-mixed
 
 resume: false
 save_every_n_train_steps: 100
+enable_progress_bar: true
 
 output_dir: saved_model
+
+scheduler: onecycle
+onecycle_pct_start: 0.25
+onecycle_div_factor: 25.0
+onecycle_final_div_factor: 10000.0

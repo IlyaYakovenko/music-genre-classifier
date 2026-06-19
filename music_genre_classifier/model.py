@@ -27,14 +27,59 @@ class LazyMaxBlurPool2d(nn.Module):
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """Run MaxPool followed by BlurPool."""
         x = self.maxpool(x)
-
-        if self.blurpool is None:
-            self.blurpool = antialiased_cnns.BlurPool(
-                channels=x.shape[1],
-                stride=self.blurpool_stride,
-            ).to(device=x.device, dtype=x.dtype)
-
+        self._ensure_blurpool(
+            channels=x.shape[1],
+            device=x.device,
+            dtype=x.dtype,
+        )
         return self.blurpool(x)
+
+    def _ensure_blurpool(
+        self,
+        channels: int,
+        device: torch.device | None = None,
+        dtype: torch.dtype | None = None,
+    ) -> None:
+        """Create BlurPool if it does not exist yet."""
+        if self.blurpool is not None:
+            return
+
+        blurpool = antialiased_cnns.BlurPool(
+            channels=channels,
+            stride=self.blurpool_stride,
+        )
+
+        if device is not None or dtype is not None:
+            blurpool = blurpool.to(device=device, dtype=dtype)
+
+        self.blurpool = blurpool
+
+    def _load_from_state_dict(
+        self,
+        state_dict,
+        prefix,
+        local_metadata,
+        strict,
+        missing_keys,
+        unexpected_keys,
+        error_msgs,
+    ) -> None:
+        """Create BlurPool before loading checkpoint if its buffer exists."""
+        filt_key = prefix + "blurpool.filt"
+
+        if self.blurpool is None and filt_key in state_dict:
+            channels = int(state_dict[filt_key].shape[0])
+            self._ensure_blurpool(channels=channels)
+
+        super()._load_from_state_dict(
+            state_dict=state_dict,
+            prefix=prefix,
+            local_metadata=local_metadata,
+            strict=strict,
+            missing_keys=missing_keys,
+            unexpected_keys=unexpected_keys,
+            error_msgs=error_msgs,
+        )
 
 
 def _as_int_stride(stride) -> int:
@@ -95,6 +140,10 @@ class MusicGenreLightningModule(LightningModule):
         label_smoothing: float = 0.15,
         mixup_alpha: float = 0.4,
         use_blurpool: bool = True,
+        scheduler: str = "onecycle",
+        onecycle_pct_start: float = 0.25,
+        onecycle_div_factor: float = 25.0,
+        onecycle_final_div_factor: float = 10000.0,
     ):
         super().__init__()
         self.save_hyperparameters()
@@ -204,11 +253,35 @@ class MusicGenreLightningModule(LightningModule):
         return loss
 
     def configure_optimizers(self):
-        """Configure optimizer."""
-        return torch.optim.AdamW(
+        """Configure optimizer and learning rate scheduler."""
+        optimizer = torch.optim.AdamW(
             self.parameters(),
             lr=self.hparams.learning_rate,
         )
+
+        if self.hparams.scheduler == "none":
+            return optimizer
+
+        if self.hparams.scheduler != "onecycle":
+            raise ValueError(f"Unknown scheduler: {self.hparams.scheduler}")
+
+        scheduler = torch.optim.lr_scheduler.OneCycleLR(
+            optimizer=optimizer,
+            max_lr=self.hparams.learning_rate,
+            total_steps=self.trainer.estimated_stepping_batches,
+            pct_start=self.hparams.onecycle_pct_start,
+            div_factor=self.hparams.onecycle_div_factor,
+            final_div_factor=self.hparams.onecycle_final_div_factor,
+        )
+
+        return {
+            "optimizer": optimizer,
+            "lr_scheduler": {
+                "scheduler": scheduler,
+                "interval": "step",
+                "frequency": 1,
+            },
+        }
 
     def _mixup(
         self,
@@ -219,10 +292,14 @@ class MusicGenreLightningModule(LightningModule):
         batch_size = images.size(0)
         num_classes = self.hparams.num_classes
 
-        lam = torch.distributions.Beta(
-            self.hparams.mixup_alpha,
-            self.hparams.mixup_alpha,
-        ).sample().to(images.device)
+        lam = (
+            torch.distributions.Beta(
+                self.hparams.mixup_alpha,
+                self.hparams.mixup_alpha,
+            )
+            .sample()
+            .to(images.device)
+        )
 
         permutation = torch.randperm(batch_size, device=images.device)
 
