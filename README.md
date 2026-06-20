@@ -1,5 +1,9 @@
 # Music Genre Classifier
 
+<p align="center">
+  <img src="assets/Logo.png" alt="Music Genre Classifier project cover" width="850">
+</p>
+
 Проект по классификации музыкальных треков по жанрам на основе mel spectrogram изображений.
 
 Цель проекта: построить воспроизводимый ML pipeline, который покрывает подготовку данных, обучение модели, логирование экспериментов, версионирование данных и моделей, инференс на новых аудиофайлах, экспорт модели в ONNX и подготовку артефактов для production serving.
