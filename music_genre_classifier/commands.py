@@ -1,37 +1,36 @@
-"""Command implementations for the project CLI."""
+from __future__ import annotations
 
-from pathlib import Path
+from hydra import compose, initialize
+from omegaconf import OmegaConf
 
-from hydra import compose, initialize_config_dir
-from omegaconf import DictConfig, OmegaConf
+from music_genre_classifier.inference import infer_audio, infer_images
 from music_genre_classifier.train import train as run_train
 
 
-def load_config(overrides: list[str] | None = None) -> DictConfig:
-    """Load Hydra config from the local configs directory."""
-    config_dir = Path.cwd() / "configs"
-
-    if not config_dir.exists():
-        raise FileNotFoundError(f"Config directory not found: {config_dir}")
-
-    with initialize_config_dir(
-        version_base=None,
-        config_dir=str(config_dir.resolve()),
-        job_name="music_genre_classifier",
-    ):
-        return compose(
-            config_name="config",
-            overrides=overrides or [],
-        )
+def _load_config(overrides: tuple[str, ...]):
+    with initialize(version_base=None, config_path="../configs"):
+        return compose(config_name="config", overrides=list(overrides))
 
 
 def show_config(*overrides: str) -> None:
-    """Print composed Hydra config."""
-    config = load_config(list(overrides))
-    print(OmegaConf.to_yaml(config))
+    """Print resolved Hydra config."""
+    config = _load_config(overrides)
+    print(OmegaConf.to_yaml(config, resolve=True))
 
 
 def train(*overrides: str) -> None:
-    """Train model with PyTorch Lightning."""
-    config = load_config(list(overrides))
+    """Run model training."""
+    config = _load_config(overrides)
     run_train(config)
+
+
+def infer_audio_command(*overrides: str) -> None:
+    """Run inference for one audio file."""
+    config = _load_config(overrides)
+    infer_audio(config)
+
+
+def infer_images_command(*overrides: str) -> None:
+    """Run inference for prepared spectrogram images."""
+    config = _load_config(overrides)
+    infer_images(config)

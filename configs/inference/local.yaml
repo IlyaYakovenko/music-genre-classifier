@@ -1,6 +1,24 @@
 checkpoint_path: saved_model/fold_0/checkpoints/best.ckpt
-genres_csv: dataset/genres.csv
+checkpoint_paths:
+  - saved_model/fold_0/checkpoints/best.ckpt
+  - saved_model/fold_1/checkpoints/best.ckpt
 
-chunk_seconds: 30
-aggregation: mean_proba
+class_names_path: sample_dataset/genres.csv
+
+audio_path: sample_audio/example.wav
+input_dir: sample_dataset/test
+
+output_json: predictions/audio_prediction.json
+output_csv: predictions/image_predictions.csv
+
+batch_size: 32
+top_k: 3
 device: auto
+
+sample_rate: 22050
+chunk_seconds: 30
+n_fft: 2048
+hop_length: 512
+n_mels: 128
+f_min: 0
+f_max: 11025

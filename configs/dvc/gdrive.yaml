@@ -1,7 +1,7 @@
 enabled: true
 
 data_target: dataset
-model_target: saved_model
+model_target: saved_model.dvc
 
 data_remote: data_remote
 models_remote: models_remote
