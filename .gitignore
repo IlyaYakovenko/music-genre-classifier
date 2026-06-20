@@ -1,7 +1,6 @@
 dataset/
 *.ipynb
 saved_model/
-plots/
 exported_model/
 triton_model_repository/
 mlruns/
@@ -228,3 +227,4 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+/saved_model
