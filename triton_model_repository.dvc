@@ -1,0 +1,6 @@
+outs:
+- md5: a9d3a824d12b3b00829d39793e005f45.dir
+  size: 378933276
+  nfiles: 3
+  hash: md5
+  path: triton_model_repository
