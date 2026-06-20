@@ -3,6 +3,7 @@ from __future__ import annotations
 from hydra import compose, initialize
 from omegaconf import OmegaConf
 
+from music_genre_classifier.export import export_onnx
 from music_genre_classifier.inference import infer_audio, infer_images
 from music_genre_classifier.train import train as run_train
 
@@ -34,3 +35,9 @@ def infer_images_command(*overrides: str) -> None:
     """Run inference for prepared spectrogram images."""
     config = _load_config(overrides)
     infer_images(config)
+
+
+def export_onnx_command(*overrides: str) -> None:
+    """Export trained fold checkpoints to one ONNX ensemble model."""
+    config = _load_config(overrides)
+    export_onnx(config)

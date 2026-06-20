@@ -1,13 +1,20 @@
 checkpoint_path: saved_model/fold_0/checkpoints/best.ckpt
-onnx_path: exported_model/model.onnx
-tensorrt_path: exported_model/model.plan
+checkpoint_paths:
+  - saved_model/fold_0/checkpoints/best.ckpt
+  - saved_model/fold_1/checkpoints/best.ckpt
 
-opset_version: 17
-input_name: input
-output_name: logits
+onnx_path: exported_model/music_genre_classifier_ensemble.onnx
+triton_repository_dir: triton_model_repository
+triton_model_name: music_genre_classifier
 
+device: cpu
 batch_size: 1
-channels: 3
-height: 224
-width: 224
-dynamic_batch: true
+input_channels: 3
+opset_version: 18
+
+verify: true
+verify_tolerance: 0.0001
+pull_model_before_export: false
+
+tensorrt_engine_path: exported_model/music_genre_classifier_ensemble.plan
+tensorrt_precision: fp16

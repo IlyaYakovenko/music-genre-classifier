@@ -3,6 +3,7 @@ from __future__ import annotations
 import fire
 
 from music_genre_classifier.commands import (
+    export_onnx_command,
     infer_audio_command,
     infer_images_command,
     show_config,
@@ -17,6 +18,7 @@ def main() -> None:
             "train": train,
             "infer-audio": infer_audio_command,
             "infer-images": infer_images_command,
+            "export-onnx": export_onnx_command,
         }
     )
 

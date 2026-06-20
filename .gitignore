@@ -6,6 +6,7 @@ triton_model_repository/
 mlruns/
 mlartifacts/
 mlflow.db
+sample_dataset/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -228,3 +229,4 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 /saved_model
+/exported_model
